@@ -1,48 +1,15 @@
-# -----------------------------
-# Etapa 1 — Dependências
-# -----------------------------
-FROM node:18-alpine AS deps
-
-WORKDIR /app
-
-COPY package.json package-lock.json* ./
-RUN npm install --legacy-peer-deps
-
-
-# -----------------------------
-# Etapa 2 — Build
-# -----------------------------
-FROM node:18-alpine AS builder
+FROM node:18-alpine
 
 WORKDIR /app
 
 COPY . .
-COPY --from=deps /app/node_modules ./node_modules
 
-RUN npm run build
+RUN npm install --legacy-peer-deps
+RUN npm run export
 
-
-# -----------------------------
-# Etapa 3 — Execução (Produção)
-# -----------------------------
-FROM node:18-alpine AS runner
-
-WORKDIR /app
-
-ENV NODE_ENV production
-
-# Copia build do Next.js
-COPY --from=builder /app/.next ./.next
-
-# Copia tudo que o Next precisa em runtime
-COPY --from=builder /app/public ./public
-COPY --from=builder /app/src ./src
-COPY --from=builder /app/next.config.mjs ./
-COPY --from=builder /app/package.json ./
-
-# Instala dependências de produção
-RUN npm install --production --legacy-peer-deps
+# Instala o servidor estático
+RUN npm install -g serve
 
 EXPOSE 3000
 
-CMD ["npm", "start"]
+CMD ["serve", "-s", "out", "-l", "3000"]
