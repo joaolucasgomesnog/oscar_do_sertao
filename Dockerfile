@@ -36,4 +36,13 @@ COPY --from=builder /app/.next ./.next
 
 # Copia tudo que o Next precisa em runtime
 COPY --from=builder /app/public ./public
-COPY --from
+COPY --from=builder /app/src ./src
+COPY --from=builder /app/next.config.mjs ./
+COPY --from=builder /app/package.json ./
+
+# Instala dependências de produção
+RUN npm install --production --legacy-peer-deps
+
+EXPOSE 3000
+
+CMD ["npm", "start"]
