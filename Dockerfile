@@ -34,15 +34,6 @@ ENV NODE_ENV production
 # Copia build do Next.js
 COPY --from=builder /app/.next ./.next
 
-# Copia *todo* o restante necessário
+# Copia tudo que o Next precisa em runtime
 COPY --from=builder /app/public ./public
-COPY --from=builder /app/src ./src   # << ESSENCIAL
-COPY --from=builder /app/next.config.mjs ./
-COPY --from=builder /app/package.json ./
-
-# Instala dependências de produção
-RUN npm install --production --legacy-peer-deps
-
-EXPOSE 3000
-
-CMD ["npm", "start"]
+COPY --from
