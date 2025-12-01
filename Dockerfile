@@ -31,13 +31,18 @@ WORKDIR /app
 
 ENV NODE_ENV production
 
-# Copia apenas o necessário para rodar o Next
+# Copia build do Next.js
 COPY --from=builder /app/.next ./.next
+
+# Copia *todo* o restante necessário
 COPY --from=builder /app/public ./public
-COPY package.json ./
+COPY --from=builder /app/src ./src   # << ESSENCIAL
+COPY --from=builder /app/next.config.mjs ./
+COPY --from=builder /app/package.json ./
 
-RUN npm install --production
+# Instala dependências de produção
+RUN npm install --production --legacy-peer-deps
 
-EXPOSE 5000
+EXPOSE 3000
 
 CMD ["npm", "start"]
