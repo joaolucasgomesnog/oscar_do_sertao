@@ -22,6 +22,6 @@ RUN npm install -g serve
 # Copia apenas arquivos gerados
 COPY --from=builder /app/out ./out
 
-EXPOSE 3000
+EXPOSE 5000
 
-CMD ["serve", "-s", "out", "-l", "3000"]
+CMD ["serve", "-s", "out", "-l", "5000"]
