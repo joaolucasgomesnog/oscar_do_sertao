@@ -8,7 +8,7 @@ function IndexHeader() {
   backgroundImage: "url(/images/hero/nordeste.jpg)",
 }}>
 
-  <div className="filter" />
+  
 
   <div className="content-center relative z-10 h-screen">
     <div className="title-brand">
